@@ -1,23 +1,21 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-module ConfigTwitter extend self
-  def client
-    require 'twitter'
+def twitter_client
+  require 'twitter'
 
-    @client ||= Twitter::Client.new(
-      :consumer_key => '',
-      :consumer_secret => '',
-      :oauth_token => '',
-      :oauth_token_secret => ''
-    )
-  end # def config_twitter
-end # module ConfigTwitter extend self
+  Twitter::Client.new(
+    :consumer_key => '',
+    :consumer_secret => '',
+    :oauth_token => '',
+    :oauth_token_secret => ''
+  )
+end
 
 def check_removers_and_update_follwers
   require 'active_record'
   require "#{File.dirname(__FILE__)}/../app/models"
-  client = ConfigTwitter.client
+  client = twitter_client
   previous_followers = Follower.all
   previous_followers_ids = previous_followers.map &:uid
 
