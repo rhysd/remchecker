@@ -56,4 +56,6 @@ def check_removers_and_update_follwers
     end
     client.direct_message_create 'Linda_pp', msg
   end
+
+  removers
 end
