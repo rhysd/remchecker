@@ -28,8 +28,15 @@ get '/' do
 end # get '/' do
 
 get '/update_followers_and_notify_removers' do
-  check_removers_and_update_followers
-  Remover.all.map{|r| "#{r.screen_name}(#{r.id})"}.inspect
+  removedby = check_removers_and_update_followers
+  unless removedby.empty?
+    html = "<html>\n"
+    html += removedby.map{|r| "<a href=\"https://twitter.com/#{r.screen_name}\">#{r.screen_name}(#{r.uid})</a>"}.join("\n")
+    html += "</html>"
+    html
+  else
+    ""
+  end
 end # get '/update_follower_data_and_notify_remove' do
 
 get '/removers' do
