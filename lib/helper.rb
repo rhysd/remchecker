@@ -12,10 +12,10 @@ def twitter_client
   )
 end
 
-def check_removers_and_update_follwers
+def check_removers_and_update_followers
   require 'active_record'
   require "#{File.dirname(__FILE__)}/../app/models"
-  client = twitter_client
+  client = ConfigTwitter.client
   previous_followers = Follower.all
   previous_followers_ids = previous_followers.map &:uid
 
@@ -24,7 +24,7 @@ def check_removers_and_update_follwers
   # XXX work around
   followers = client.users(*client.follower_ids.attrs[:ids])
 
-  # register new follwers to DB
+  # register new followers to DB
   followers.each do |user|
     screen_name = user.attrs[:screen_name]
     uid = user.attrs[:id]
@@ -42,17 +42,17 @@ def check_removers_and_update_follwers
     unless followers.find_index{|f| f.attrs[:id] == follower.uid }
       removers << follower
       new_remover = Remover.create do |r|
-        r.uid = follwer.uid
-        r.screen_name = follwer.screen_name
+        r.uid = follower.uid
+        r.screen_name = follower.screen_name
       end
       Follower.delete_all uid: follower.uid
     end
   end
 
   unless removers.empty?
-    msg = 'removers: ' + join(removers.map{|r| "#{r.screen_name}(#{r.uid})"}, ' ')
+    msg = 'removed by: ' + removers.map{|r| "#{r.screen_name}(#{r.uid})"}.join(' ')
     if msg.length > 140
-      msg = 'removers: ' + join(removers.map{|r| r.screen_name}, ' ')
+      msg = 'removed by: ' + removers.map{|r| r.screen_name}.join(' ')
     end
     client.direct_message_create 'Linda_pp', msg
   end

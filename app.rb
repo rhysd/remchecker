@@ -28,8 +28,8 @@ get '/' do
 end # get '/' do
 
 get '/update_followers_and_notify_removers' do
-  check_removers_and_update_follwers
-  Remover.all.inspect
+  check_removers_and_update_followers
+  Remover.all.map{|r| "#{r.screen_name}(#{r.id})"}.inspect
 end # get '/update_follower_data_and_notify_remove' do
 
 get '/removers' do
