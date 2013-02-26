@@ -28,7 +28,8 @@ get '/' do
 end # get '/' do
 
 get '/update_followers_and_notify_removers' do
-  removedby = check_removers_and_update_followers
+  check_removers_and_update_followers
+  removedby_all = Remover.all
   unless removedby.empty?
     html = "<html>\n"
     html += removedby.map{|r| "<a href=\"https://twitter.com/#{r.screen_name}\">#{r.screen_name}(#{r.uid})</a>"}.join("\n")
